@@ -3,14 +3,234 @@
     <head>
         <meta charset="utf-8">
         <title>D3 Page Template</title>
-        <script type="text/javascript" src="d3.js"></script>
+        <script type="text/javascript" src="js/d3.js"></script>
         <!--<script type="text/javascript" src="d3.min.js"></script> -->
         <script src="https://d3js.org/d3.v3.js"></script>
     </head>
     <body>
         <h1>Social Data Analysis: Assignment 2 </h1>
+        <button onclick="data2003()">Data 2003</button>
+        <button onclick="data2015()">Data 2015</button>
         <script type="text/javascript">
-            d3.select("body").append("p").text("New paragraph!");
+            var body = d3.select("body")
+            var formatPercent = d3.format('.2')
+            var margin = { top: 50, right: 50, bottom: 50, left: 50 }
+			var h = 800 - margin.top - margin.bottom
+			var w = 800 - margin.left - margin.right
+			var text;
+	// Scales
+  			var colorScale = d3.scale.category20()
+            var circles;
+            var dataSet2003;
+            var dataSet2015; 
+            var xMax2015=0;
+            var yMax2015=0;
+            var xMax2003=0;
+            var yMax2003=0;
+            var x
+            var data;
+            var xScale2;
+            var yScale2;
+            var xScale;
+            var yScale;
+            var svg;
+            d3.csv("2003.csv", function(data2003) {
+    				dataSet2003 = data2003;
+    				console.log(data2003);
+    				 dataSet2003.forEach(function(entry) {
+    				//console.log(entry);
+    				//console.log('Prostitution',entry.Prostitution);
+    				if (xMax2003<parseInt(entry.Prostitution))
+    					xMax2003 = entry.Prostitution;
+
+    				if (yMax2003<parseInt(entry.Theft))
+    					yMax2003 = entry.Theft
+
+					});
+    				console.log(xMax2003,yMax2003);
+
+
+    				d3.csv("2015.csv", function(data2015) {
+            		dataSet2015 = data2015;
+    				console.log(data2015);
+    				dataSet2015.forEach(function(entry) {
+    				if (xMax2015<parseInt(entry.Prostitution))
+    					xMax2015 = parseInt(entry.Prostitution);
+
+    				if (yMax2015<parseInt(entry.Theft))
+    					yMax2015 = parseInt(entry.Theft);
+
+					});
+    				console.log(xMax2015,yMax2015);
+    				 console.log(xMax2003, xMax2015);
+    				 xScale2 = xMax2003;
+    				 yScale2 = yMax2003;
+    				 if (xScale2<xMax2015)
+    				 	xScale2  = xMax2015;
+    				 if (yScale2 < yMax2015)
+    				 	yScale2 = yMax2015;
+
+    				data= data2003;
+    				
+    				myFunction();
+					}); //end of 2015 csv 
+    				 }); //end of 2003 csv
+            
+
+           
+
+            
+            function myFunction()
+            {
+			svg = d3.select("body").append('svg')
+					    .attr('height',h + margin.top + margin.bottom)
+					    .attr('width',w + margin.left + margin.right)
+					  .append('g')
+					    .attr('transform','translate(' + margin.left + ',' + margin.top + ')')
+    				 xScale = d3.scale.linear()
+    						.domain([
+    									0,xScale2
+    								])
+    						.range([0,w]);
+					  yScale = d3.scale.linear()
+					    .domain([
+					    	0,yScale2
+					    	])
+					    .range([h,0]);
+
+					
+					// X-axis
+					var xAxis = d3.svg.axis()
+					  .scale(xScale)
+					  .tickFormat(formatPercent)
+					  .ticks(5)
+					  .orient('bottom')
+				  // Y-axis
+					var yAxis = d3.svg.axis()
+					  .scale(yScale)
+					  .tickFormat(formatPercent)
+					  .ticks(5)
+					  .orient('left')
+				  // Circles
+				  circles = svg.selectAll('circle')
+				      .data(data)
+				      .enter()
+				    .append('circle')
+				      .attr('cx',function (d) { return xScale(parseInt(d.Prostitution)) })
+				      .attr('cy',function (d) { return yScale(parseInt(d.Theft)) })
+				      .attr('r', function (d) { return (parseInt(d.Prostitution) + parseInt(d.Theft))/100  })
+				      .attr('stroke','black')
+				      .attr('stroke-width',1)
+				      .attr('fill',function (d,i) { return colorScale(i) })
+				      .on('mouseover', function () {
+				        d3.select(this)
+				          .transition()
+				          .duration(500)
+				          .attr('stroke-width',3)
+				      })
+				      .on('mouseout', function () {
+				        d3.select(this)
+				          .transition()
+				          .duration(500)
+				          .attr('stroke-width',1)
+				      })
+				    .append('title') // Tooltip
+				      .text(function (d) { return d.District +
+				                           '\nProstitution: ' + formatPercent(d.Prostitution) +
+				                           '\nTheft.: ' + formatPercent(d.Theft) })
+
+
+				      text = svg.selectAll("text")
+                       .data(data)
+                      .enter()
+                        .append("text");
+
+						var textLabels = text
+                 .attr("x", function(d) { return xScale(parseInt(d.Prostitution)) })
+                 .attr("y", function(d) { return  yScale(parseInt(d.Theft)); })
+                 .text( function (d) { return "" + d.District +  ""; })
+               .attr("font-family", "sans-serif")
+               .attr("font-size", "10")
+                .attr("fill", "black");
+
+
+				  // X-axis
+				  svg.append('g')
+				      .attr('class','axis')
+				      .attr('transform', 'translate(0,' + h + ')')
+				      .call(xAxis)
+				    .append('text') // X-axis Label
+				      .attr('class','label')
+				      .attr('y',-10)
+				      .attr('x',w)
+				      .attr('dy','.71em')
+				      .style('text-anchor','end')
+				      .text('Prostitution')
+				  // Y-axis
+				  svg.append('g')
+				      .attr('class', 'axis')
+				      .call(yAxis)
+				    .append('text') // y-axis Label
+				      .attr('class','label')
+				      .attr('transform','rotate(-90)')
+				      .attr('x',0)
+				      .attr('y',5)
+				      .attr('dy','.71em')
+				      .style('text-anchor','end')
+				      .text('Car Theft')
+
+
+            }
+
+            function data2003()
+            {
+            		data =dataSet2003;
+            		svg.selectAll('circle')
+				      .data(data).transition().duration(1000).attr('cx',function (d) { return xScale(parseInt(d.Prostitution)) })
+				      .attr('cy',function (d) { return yScale(parseInt(d.Theft)) })
+				      .attr('r', function (d) { return (parseInt(d.Prostitution) + parseInt(d.Theft))/100  })
+				      
+
+				      text = svg.selectAll("text")
+                       .data(data)
+                      .transition().duration(1000)
+
+						var textLabels = text
+                 .attr("x", function(d) { return xScale(parseInt(d.Prostitution)) })
+                 .attr("y", function(d) { return  yScale(parseInt(d.Theft)); })
+                 .text( function (d) { return "" + d.District +  " "; })
+               .attr("font-family", "sans-serif")
+               .attr("font-size", "10")
+                .attr("fill", "black");
+   //	circlesEnter.exit().remove()
+
+            }
+            function data2015()
+            {	console.log(dataSet2015);
+            	console.log(dataSet2003);
+            	data = dataSet2015;
+            	svg.selectAll('circle')
+				      .data(data).transition().duration(1000).attr('cx',function (d) { return xScale(parseInt(d.Prostitution)) })
+				      .attr('cy',function (d) { return yScale(parseInt(d.Theft)) })
+				      .attr('r', function (d) { return (parseInt(d.Prostitution) + parseInt(d.Theft))/100  })
+				      
+
+				        text = svg.selectAll("text")
+                       .data(data)
+                      .transition().duration(1000)
+
+						var textLabels = text
+                 .attr("x", function(d) { return xScale(parseInt(d.Prostitution)) })
+                 .attr("y", function(d) { return  yScale(parseInt(d.Theft)); })
+                 .text( function (d) { return "" + d.District +  ""; })
+               .attr("font-family", "sans-serif")
+               .attr("font-size", "10")
+                .attr("fill", "black");
+
+            }
+            
         </script>
+
+        
     </body>
 </html>
