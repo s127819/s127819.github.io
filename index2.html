@@ -34,20 +34,58 @@ text.big-text{
 
 </style>
 <body>
- <button onclick="k2B()">k2</button>
- <button onclick="k3B()">k3</button>
- <button onclick="k4B()">k4</button>
- <button onclick="k5B()">k5</button>
- <button onclick="k6B()">k6</button>
-<svg></svg>
+  <di>
+    <h3 align="center">Exercise 2B: Visualising Geodata</h3>
+    <p>For this final sub-assignment we will visualize your results from the KK-means exercise from week 5.</p>
+    <ul>
+      <li>We try our luck with an geospatial visualization displaying results for K=2,…,6K=2,…,6. The overall idea is each
+        value of KK has an associated view (you should be able to toggle between these) where each of the KK centroids is shown
+         as a large colored dot (you choose the color scheme), and all GPS points belonging to that centroid are colored using
+         a related RGB value. My plot looks like this.</li>
+      <li>Also please include an IPython notebook containing the solution to the KK-means exercise from week 5 in your GitHub repo
+        so we can check it out, if necessary.</li>
+    </ul>
+    <p>You may find that following the steps below are helpful</p>
+    <ul>
+      <li>Using Python, create a CVS/JSON file containing the data you wish to visualize.</li>
+      <ul>
+        <li>The datapoints you should use, is the same as for week 5, so it is all crimes with type = PROSTITUTION</li>
+        <li>Note: Think carefully about how you can minimize the size of the file containing the data. My file is around 700KB.
+            Why is the size of the file important?</li>
+      </ul>
+      <li>Start by simply creating a map of the SFPD Districts using the GeoJSON shapefiles we've lovingly found for you. You get
+          to choose the color and other parameters.</li>
+      <ul>
+        <li>You can find help in chapter 12 in the IDV book.</li>
+        <li>Note : If you do not see anything, take a look at the scale value, and understand the purpose of it.</li>
+      </ul>
+      <li>Start by creating the view for K=2, then generalizing.</li>
+      <li>Think about how you want to do the toggling. A simple way is to use 5 buttons you can click.</li>
+      <ul>
+        <li>[Optional but very cool!]. You can make your visualization interactive by adding the following functionality. Select
+            each view by clicking a button (standard) but then add the ability to "preview" results for some other value of KK simply by doing a hover-over of the associated button</li>
+      </ul>
+      <li>Make the map as fancy as you like.</li>
+    </ul>
+  </di>
+  <div align="center">
+    <button onclick="k2B()">k2</button>
+    <button onclick="k3B()">k3</button>
+    <button onclick="k4B()">k4</button>
+    <button onclick="k5B()">k5</button>
+    <button onclick="k6B()">k6</button>
+  </div>
+  <div align="center">
+    <svg></svg>
+  </div>
 
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script>
 var k2,k3,k4,k5,k6;
 var colors =  ["red", "blue", "green", "white", "#ff00ff", "#ff6600", "#00ffff" ];
 var circles;
-var width = 700,
-    height = 700,
+var width = 680,
+    height = 570,
     centered;
 
 // Define color scale
@@ -59,7 +97,7 @@ var color = d3.scale.linear()
 var projection = d3.geo.mercator()
   .scale(190000)
   // Center the Map in Colombia
-  .center([-122.4167804 , 37.752876])
+  .center([-122.4367804 , 37.772876])
   .translate([width / 2, height / 2]);
 
 var projection2 = d3.geo.mercator().center([-122.4167804 , 37.752876]).scale(190000)
@@ -102,6 +140,16 @@ var bigText = g.append('text')
   .attr('x', 20)
   .attr('y', 45);
 
+  g.append('text').attr('x', 100).attr('y', 475).html('TARAVAL');
+     g.append('text').attr('x', 40).attr('y', 230).html('RICHMOND');
+     g.append('text').attr('x', 210).attr('y', 330).html('PARK');
+     g.append('text').attr('x', 260).attr('y', 365).html('MISSION');
+     g.append('text').attr('x', 255).attr('y', 452).html('INGLESIDE');
+     g.append('text').attr('x', 435).attr('y', 472).html('BAYVIEW');
+     g.append('text').attr('x', 340).attr('y', 155).html('CENTRAL');
+     g.append('text').attr('x', 420).attr('y', 240).html('SOUTHERN');
+     g.append('text').attr('x', 180).attr('y', 150).html('NORTHERN');
+     g.append('text').attr('x', 325).attr('y', 220).html('TENDERLOIN');
 // Load map data
 d3.json('sfpddistricts.geojson.json', function(error, mapData) {
   var features = mapData.features;
@@ -133,11 +181,11 @@ d3.csv("k2.csv", function(data) {
 				      .attr('cy',function (d) { return projection([parseFloat(d.lat),parseFloat(d.lon)])[1]  })
 				      .attr('r',  function (d) {  return returnSize(parseInt(d.type))})
 				      .attr('stroke','black')
-				      .attr('stroke-width', function (d) {  return returnStrokeSize(parseInt(d.type))})
-				      .attr('fill', function (d) {  return returnColor(parseInt(d.type))})
+				      .attr('stroke-width',function (d) {  return returnStrokeSize(parseInt(d.type))})
+				      .attr('fill', function (d) {  return returnColor(parseInt(d.type))});
 				      			k2 = data;
 				  }); //end of csv loading
-			
+
 
 
 }); //end of json loading
@@ -153,20 +201,18 @@ function returnSize(i)
 	if (i>=10)
 		return 10;
 	else
-		return 4  ;
+		return 5;
 }
-
 function returnStrokeSize(i)
 {
   if (i>=10)
     return 4;
   return 1;
 }
-
 function returnColor(i)
 {	//console.log('in color');
 	if (i>=10)
-		 i=i/10;
+		i=i/10
 
 	//console.log(colors[i-1]);
 	return colors[i-1];
@@ -190,30 +236,7 @@ function fillFn(d){
 
 // When clicked, zoom in
 function clicked(d) {
-  // var x, y, k;
 
-  // // Compute centroid of the selected path
-  // if (d && centered !== d) {
-  //   var centroid = path.centroid(d);
-  //   x = centroid[0];
-  //   y = centroid[1];
-  //   k = 4;
-  //   centered = d;
-  // } else {
-  //   x = width / 2;
-  //   y = height / 2;
-  //   k = 1;
-  //   centered = null;
-  // }
-
-  // // Highlight the clicked province
-  // mapLayer.selectAll('path')
-  //   .style('fill', function(d){return centered && d===centered ? '#D5708B' : fillFn(d);});
-
-  // // Zoom
-  // g.transition()
-  //   .duration(750)
-  //   .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')');
 }
 
 function mouseover(d){
@@ -253,88 +276,9 @@ var FONTS = [
   "Old StandardTT",
   "Droid+Sans",
   "Lobster",
-  
+
 ];
 
-// function textArt(text){
-//   // Use random font
-//   var fontIndex = Math.round(Math.random() * FONTS.length);
-//   var fontFamily = FONTS[fontIndex] + ', ' + BASE_FONT;
-
-//   bigText
-//     .style('font-family', fontFamily)
-//     .text(text);
-
-//   // Use dummy text to compute actual width of the text
-//   // getBBox() will return bounding box
-//   dummyText
-//     .style('font-family', fontFamily)
-//     .text(text);
-//   var bbox = dummyText.node().getBBox();
-
-//   var textWidth = bbox.width;
-//   var textHeight = bbox.height;
-//   var xGap = 3;
-//   var yGap = 1;
-
-//   // Generate the positions of the text in the background
-//   var xPtr = 0;
-//   var yPtr = 0;
-//   var positions = [];
-//   var rowCount = 0;
-//   while(yPtr < height){
-//     while(xPtr < width){
-//       var point = {
-//         text: text,
-//         index: positions.length,
-//         x: xPtr,
-//         y: yPtr
-//       };
-//       var dx = point.x - width/2 + textWidth/2;
-//       var dy = point.y - height/2;
-//       point.distance = dx*dx + dy*dy;
-
-//       positions.push(point);
-//       xPtr += textWidth + xGap;
-//     }
-//     rowCount++;
-//     xPtr = rowCount%2===0 ? 0 : -textWidth/2;
-//     xPtr += Math.random() * 10;
-//     yPtr += textHeight + yGap;
-//   }
-
-//   var selection = effectLayer.selectAll('text')
-//     .data(positions, function(d){return d.text+'/'+d.index;});
-
-//   // Clear old ones
-//   selection.exit().transition()
-//     .style('opacity', 0)
-//     .remove();
-
-//   // Create text but set opacity to 0
-//   selection.enter().append('text')
-//     .text(function(d){return d.text;})
-//     .attr('x', function(d){return d.x;})
-//     .attr('y', function(d){return d.y;})
-//     .style('font-family', fontFamily)
-//     .style('fill', '#777')
-//     .style('opacity', 0);
-
-//   selection
-//     .style('font-family', fontFamily)
-//     .attr('x', function(d){return d.x;})
-//     .attr('y', function(d){return d.y;});
-
-//   // Create transtion to increase opacity from 0 to 0.1-0.5
-//   // Add delay based on distance from the center of the <svg> and a bit more randomness.
-//   selection.transition()
-//     .delay(function(d){
-//       return d.distance * 0.01 + Math.random()*1000;
-//     })
-//     .style('opacity', function(d){
-//       return 0.1 + Math.random()*0.4;
-//     });
-// }
 
 
   function addPoints(data)
@@ -352,7 +296,7 @@ var FONTS = [
 				      .attr('stroke-width',function (d) {  return returnStrokeSize(parseInt(d.type))})
 				      .attr('fill', function (d) {  return returnColor(parseInt(d.type))});
 
-				  
+
   }
 
 
@@ -365,26 +309,6 @@ var FONTS = [
 
 
 
-
-      //       		data =dataSet2003;
-      //       		svg.selectAll('circle')
-				  //     .data(data).transition().duration(1000).attr('cx',function (d) { return xScale(parseInt(d.Prostitution)) })
-				  //     .attr('cy',function (d) { return yScale(parseInt(d.Theft)) })
-				  //     .attr('r', function (d) { return (parseInt(d.Prostitution) + parseInt(d.Theft))/100  })
-				      
-
-				  //     text = svg.selectAll("text")
-      //                  .data(data)
-      //                 .transition().duration(1000)
-
-						// var textLabels = text
-      //            .attr("x", function(d) { return xScale(parseInt(d.Prostitution)) })
-      //            .attr("y", function(d) { return  yScale(parseInt(d.Theft)); })
-      //            .text( function (d) { return "" + d.District +  " "; })
-      //          .attr("font-family", "sans-serif")
-      //          .attr("font-size", "10")
-      //           .attr("fill", "black");
-   //	circlesEnter.exit().remove()
 
             }
 
