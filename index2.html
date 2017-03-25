@@ -44,7 +44,7 @@ text.big-text{
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script>
 var k2,k3,k4,k5,k6;
-var colors =  ["red", "blue", "green", "black", "#ff00ff", "#ff6600", "#00ffff" ];
+var colors =  ["red", "blue", "green", "white", "#ff00ff", "#ff6600", "#00ffff" ];
 var circles;
 var width = 700,
     height = 700,
@@ -133,8 +133,8 @@ d3.csv("k2.csv", function(data) {
 				      .attr('cy',function (d) { return projection([parseFloat(d.lat),parseFloat(d.lon)])[1]  })
 				      .attr('r',  function (d) {  return returnSize(parseInt(d.type))})
 				      .attr('stroke','black')
-				      .attr('stroke-width',1)
-				      .attr('fill', function (d) {  return returnColor(parseInt(d.type))});
+				      .attr('stroke-width', function (d) {  return returnStrokeSize(parseInt(d.type))})
+				      .attr('fill', function (d) {  return returnColor(parseInt(d.type))})
 				      			k2 = data;
 				  }); //end of csv loading
 			
@@ -153,13 +153,20 @@ function returnSize(i)
 	if (i>=10)
 		return 10;
 	else
-		return 5;
+		return 4  ;
+}
+
+function returnStrokeSize(i)
+{
+  if (i>=10)
+    return 4;
+  return 1;
 }
 
 function returnColor(i)
 {	//console.log('in color');
 	if (i>=10)
-		return "white"
+		 i=i/10;
 
 	//console.log(colors[i-1]);
 	return colors[i-1];
@@ -342,7 +349,7 @@ var FONTS = [
 				      .attr('cy',function (d) { return projection([parseFloat(d.lat),parseFloat(d.lon)])[1]  })
 				      .attr('r',  function (d) {  return returnSize(parseInt(d.type))})
 				      .attr('stroke','black')
-				      .attr('stroke-width',1)
+				      .attr('stroke-width',function (d) {  return returnStrokeSize(parseInt(d.type))})
 				      .attr('fill', function (d) {  return returnColor(parseInt(d.type))});
 
 				  
