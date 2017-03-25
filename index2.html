@@ -36,6 +36,7 @@ text.big-text{
 <body>
   <di>
     <h3 align="center">Exercise 2B: Visualising Geodata</h3>
+    <a href="index.html">Return to Main Webpage</a>
     <p>For this final sub-assignment we will visualize your results from the KK-means exercise from week 5.</p>
     <ul>
       <li>We try our luck with an geospatial visualization displaying results for K=2,…,6K=2,…,6. The overall idea is each
@@ -67,17 +68,26 @@ text.big-text{
       </ul>
       <li>Make the map as fancy as you like.</li>
     </ul>
+    <di>
+      <h4>Answer:</h4>
+    </di>
   </di>
-  <div align="center">
-    <button onclick="k2B()">k2</button>
-    <button onclick="k3B()">k3</button>
-    <button onclick="k4B()">k4</button>
-    <button onclick="k5B()">k5</button>
-    <button onclick="k6B()">k6</button>
-  </div>
-  <div align="center">
+
+  <di align="center">
+    <a href="http://nbviewer.jupyter.org/github/s127819/s127819.github.io/blob/master/Assignment2DataSocial.ipynb">Link to Python NoteBook</a>
+  </di>
+
+<div align="center">
+  <button onclick="k2B()">k2</button>
+  <button onclick="k3B()">k3</button>
+  <button onclick="k4B()">k4</button>
+  <button onclick="k5B()">k5</button>
+  <button onclick="k6B()">k6</button>
+</div>
+
+<div align="center">
     <svg></svg>
-  </div>
+</div>
 
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script>
@@ -140,16 +150,16 @@ var bigText = g.append('text')
   .attr('x', 20)
   .attr('y', 45);
 
-  g.append('text').attr('x', 100).attr('y', 475).html('TARAVAL');
-     g.append('text').attr('x', 40).attr('y', 230).html('RICHMOND');
-     g.append('text').attr('x', 210).attr('y', 330).html('PARK');
-     g.append('text').attr('x', 260).attr('y', 365).html('MISSION');
-     g.append('text').attr('x', 255).attr('y', 452).html('INGLESIDE');
-     g.append('text').attr('x', 435).attr('y', 472).html('BAYVIEW');
-     g.append('text').attr('x', 340).attr('y', 155).html('CENTRAL');
-     g.append('text').attr('x', 420).attr('y', 240).html('SOUTHERN');
-     g.append('text').attr('x', 180).attr('y', 150).html('NORTHERN');
-     g.append('text').attr('x', 325).attr('y', 220).html('TENDERLOIN');
+     g.append('text').attr('x', 160).attr('y', 475+20).html('TARAVAL');
+     g.append('text').attr('x', 100).attr('y', 230+20).html('RICHMOND');
+     g.append('text').attr('x', 270).attr('y', 330+20).html('PARK');
+     g.append('text').attr('x', 310+10).attr('y', 365+20).html('MISSION');
+     g.append('text').attr('x', 305+10).attr('y', 452+20).html('INGLESIDE');
+     g.append('text').attr('x', 485+10).attr('y', 472+20).html('BAYVIEW');
+     g.append('text').attr('x', 390+10).attr('y', 155+20).html('CENTRAL');
+     g.append('text').attr('x', 470+10).attr('y', 240+20).html('SOUTHERN');
+     g.append('text').attr('x', 230+10).attr('y', 150+20).html('NORTHERN');
+     g.append('text').attr('x', 375+10).attr('y', 220+20).html('TENDERLOIN');
 // Load map data
 d3.json('sfpddistricts.geojson.json', function(error, mapData) {
   var features = mapData.features;
