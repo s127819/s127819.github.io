@@ -2,27 +2,29 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>D3 Page Template</title>
+        <title>Social Data Analysis: Assignment 2</title>
         <script type="text/javascript" src="js/d3.js"></script>
         <!--<script type="text/javascript" src="d3.min.js"></script> -->
         <script src="https://d3js.org/d3.v3.js"></script>
     </head>
     <body>
-        <h1>Social Data Analysis: Assignment 2 </h1>
+        <h1 align="center">Social Data Analysis: Assignment 2 </h1>
+        <h3 align="center">Exercise 2A: One Scatter Plot and Two Datasets</h3>
         <button onclick="data2003()">Data 2003</button>
         <button onclick="data2015()">Data 2015</button>
+        <form name="Exercise 1A">
         <script type="text/javascript">
             var body = d3.select("body")
             var formatPercent = d3.format('.2')
             var margin = { top: 50, right: 50, bottom: 50, left: 50 }
-			var h = 650 - margin.top - margin.bottom
-			var w = 650 - margin.left - margin.right
-			var text;
-	// Scales
-  			var colorScale = d3.scale.category20()
+			      var h = 650 - margin.top - margin.bottom
+			      var w = 650 - margin.left - margin.right
+			      var text;
+	          // Scales
+  			    var colorScale = d3.scale.category20()
             var circles;
             var dataSet2003;
-            var dataSet2015; 
+            var dataSet2015;
             var xMax2015=0;
             var yMax2015=0;
             var xMax2003=0;
@@ -49,7 +51,6 @@
 					});
     				console.log(xMax2003,yMax2003);
 
-
     				d3.csv("2015.csv", function(data2015) {
             		dataSet2015 = data2015;
     				console.log(data2015);
@@ -71,18 +72,13 @@
     				 	yScale2 = yMax2015;
 
     				data= data2003;
-    				
+
     				myFunction();
-					}); //end of 2015 csv 
+					}); //end of 2015 csv
     				 }); //end of 2003 csv
-            
 
-           
-
-            
-            function myFunction()
-            {
-			svg = d3.select("body").append('svg')
+        function myFunction()  {
+			        svg = d3.select("form").append('svg')
 					    .attr('height',h + margin.top + margin.bottom)
 					    .attr('width',w + margin.left + margin.right)
 					  .append('g')
@@ -98,7 +94,6 @@
 					    	])
 					    .range([h,0]);
 
-					
 					// X-axis
 					var xAxis = d3.svg.axis()
 					  .scale(xScale)
@@ -161,8 +156,8 @@
 				      .call(xAxis)
 				    .append('text') // X-axis Label
 				      .attr('class','label')
-				      .attr('y',-10)
-				      .attr('x',w)
+				      .attr('y',15)
+				      .attr('x',w+50)
 				      .attr('dy','.71em')
 				      .style('text-anchor','end')
 				      .text('Prostitution')
@@ -174,7 +169,7 @@
 				      .attr('class','label')
 				      .attr('transform','rotate(-90)')
 				      .attr('x',0)
-				      .attr('y',5)
+				      .attr('y',-30)
 				      .attr('dy','.71em')
 				      .style('text-anchor','end')
 				      .text('Car Theft')
@@ -189,7 +184,7 @@
 				      .data(data).transition().duration(1000).attr('cx',function (d) { return xScale(parseInt(d.Prostitution)) })
 				      .attr('cy',function (d) { return yScale(parseInt(d.Theft)) })
 				      .attr('r', function (d) { return (parseInt(d.Prostitution) + parseInt(d.Theft))/100  })
-				      
+
 
 				      text = svg.selectAll("text")
                        .data(data)
@@ -213,7 +208,7 @@
 				      .data(data).transition().duration(1000).attr('cx',function (d) { return xScale(parseInt(d.Prostitution)) })
 				      .attr('cy',function (d) { return yScale(parseInt(d.Theft)) })
 				      .attr('r', function (d) { return (parseInt(d.Prostitution) + parseInt(d.Theft))/100  })
-				      
+
 
 				        text = svg.selectAll("text")
                        .data(data)
@@ -228,9 +223,10 @@
                 .attr("fill", "black");
 
             }
-            
         </script>
-
-        
+      </form>
+      <form name="Assignment 2B">
+        <h3 align="center">Exercise 2B: Visualising Geodata</h3>
+      </form>
     </body>
 </html>
